@@ -1,6 +1,6 @@
 #include "FusionEKF.h"
 #include "tools.h"
-#include "eigen3/Eigen/Dense"
+#include "Eigen/Dense"
 #include <iostream>
 
 using namespace std;
@@ -75,7 +75,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       //set the state with the initial position and velocity
-      ekf_.x_ << measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1], 0, 0;
+      ekf_.x_ << (double)(measurement_pack.raw_measurements_[0]), (double)(measurement_pack.raw_measurements_[1]), 0, 0;
     }
       
     ekf_.P_ = MatrixXd(4, 4);
@@ -107,9 +107,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   double dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;    //dt - expressed in seconds
   previous_timestamp_ = measurement_pack.timestamp_;
 
-  float dt_2 = dt * dt;
-  float dt_3 = dt_2 * dt;
-  float dt_4 = dt_3 * dt;
+  double dt_2 = dt * dt;
+  double dt_3 = dt_2 * dt;
+  double dt_4 = dt_3 * dt;
+  double dt_4_4 = dt_4 / 4.0;
+  double dt_3_2 = dt_3 / 2.0;
 
   //Modify the F matrix so that the time is integrated
   ekf_.F_(0, 2) = dt;
@@ -119,10 +121,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   double noise_ay = 9.0;
 
   //set the process covariance matrix Q
-  ekf_.Q_ <<  dt_4/4.0*noise_ax, 0, dt_3/2.0*noise_ax, 0,
-			   0, dt_4/4.0*noise_ay, 0, dt_3/2.0*noise_ay,
-			   dt_3/2.0*noise_ax, 0, dt_2*noise_ax, 0,
-			   0, dt_3/2.0*noise_ay, 0, dt_2*noise_ay;
+  ekf_.Q_ <<  dt_4_4*noise_ax, 0, dt_3_2*noise_ax, 0,
+			   0, dt_4_4*noise_ay, 0, (float)(dt_3_2*noise_ay),
+			   dt_3_2*noise_ax, 0, dt_2*noise_ax, 0,
+			   0, dt_3_2*noise_ay, 0, dt_2*noise_ay;
   
   ekf_.Predict();
 
