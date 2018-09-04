@@ -8,6 +8,8 @@ using Eigen::VectorXd;
 // Please note that the Eigen library does not initialize 
 // VectorXd or MatrixXd objects with zeros upon creation.
 
+// NOTE: Some parts of the code has been taken from Udacity quiz
+
 KalmanFilter::KalmanFilter() {}
 
 KalmanFilter::~KalmanFilter() {}
@@ -46,14 +48,14 @@ void KalmanFilter::Update(const VectorXd &z) {
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
-  double px = x_(0);
-  double py = x_(1);
-  double vx = x_(2);
-  double vy = x_(3);
+  float px = x_(0);
+  float py = x_(1);
+  float vx = x_(2);
+  float vy = x_(3);
 
-  double rho = sqrt(px*px + py*py);
-  double phi = atan2(py ,px);
-  double rhodot = (px*vx + py*vy) / rho;
+  float rho = sqrt(px*px + py*py);
+  float phi = atan2(py ,px);
+  float rhodot = (px*vx + py*vy) / rho;
 
   VectorXd h = VectorXd(3);
   h << rho, phi, rhodot;

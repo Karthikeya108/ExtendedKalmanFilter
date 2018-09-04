@@ -9,6 +9,8 @@ Tools::Tools() {}
 
 Tools::~Tools() {}
 
+// Code reused from the Udacity quiz
+
 VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
                               const vector<VectorXd> &ground_truth) {
   	VectorXd rmse(4);
@@ -41,6 +43,8 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 
 	return rmse;
 }
+
+// Code reused from Udacity quiz
 
 MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
         

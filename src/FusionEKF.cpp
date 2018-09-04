@@ -62,20 +62,22 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       /**
       Convert radar from polar to cartesian coordinates and initialize state.
       */
-      double rho = measurement_pack.raw_measurements_[0];
-      double phi = measurement_pack.raw_measurements_[1];
-      double rhodot = measurement_pack.raw_measurements_[2];
-       
-      double x  = cos(phi) * rho;
-      double y  = sin(phi) * rho;
-      double vx = cos(phi) * rhodot;
-      double vy = sin(phi) * rhodot;
+      float rho = measurement_pack.raw_measurements_[0];
+      float phi = measurement_pack.raw_measurements_[1];
+      float rhodot = measurement_pack.raw_measurements_[2];
+    
+      // Reference : https://www.mathsisfun.com/polar-cartesian-coordinates.html
+
+      float x  = cos(phi) * rho;
+      float y  = sin(phi) * rho;
+      float vx = cos(phi) * rhodot;
+      float vy = sin(phi) * rhodot;
 
       ekf_.x_ << x, y, vx, vy;
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       //set the state with the initial position and velocity
-      ekf_.x_ << (double)(measurement_pack.raw_measurements_[0]), (double)(measurement_pack.raw_measurements_[1]), 0, 0;
+      ekf_.x_ << measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1], 0, 0;
     }
       
     ekf_.P_ = MatrixXd(4, 4);
